@@ -33,73 +33,79 @@ class Visitor {
         timeOfVisit time,
         assistantName varchar(50),
         comments varchar(200)
-        )`
-    ),
+        )`,
       (error) => {
         if (error) {
           throw error;
         }
-      };
+      }
+    )
   }
 
   async addNewVisitor() {
     pool.query(
       `INSERT INTO visitors(visitorName, visitorAge, dateOfVisit, timeOfVisit, assistantName,comments) values
-        (${this.visitorName}, ${this.visitorAge}, ${this.dateOfVisit}, ${this.timeOfVisit}, ${this.assistantName}, ${this.comments})`
-    ),
+        (${this.visitorName}, ${this.visitorAge}, ${this.dateOfVisit}, ${this.timeOfVisit}, ${this.assistantName}, ${this.comments})`,
       (error) => {
         if (error) {
           throw error;
         }
-      };
+      }
+    )
   }
 
   async listAllVisitors() {
-    pool.query(`SELECT * from visitors`),
+    pool.query(`SELECT * from visitors`,
       (error) => {
         if (error) {
           throw error;
         }
-      };
+      }
+    )
   }
 
   async deleteVisitor() {
-    pool.query(`DELETE from visitors WHERE fullname = ${this.visitorName}`),
+    pool.query(`DELETE from visitors WHERE fullname = ${this.visitorName}`,
       (error) => {
         if (error) {
           throw error;
         }
-      };
+      }
+    )
   }
 
   async updateVisitor(columnToUpdate, newInfo) {
     pool.query(
       `UPDATE visitors SET ${columnToUpdate} = $1 WHERE visitorName = $2`,
-      [newInfo, this.visitorName]
-    ),
-      (error) => {
+      [newInfo, this.visitorName],
+      (error,results) => {
         if (error) {
           throw error;
         }
-      };
+      console.log(results.rows)
+      }
+    )
   }
 
   async viewOneVisitor(visitorid) {
-    pool.query(`SELECT * from visitors WHERE visitorid = $1`, visitorid),
-      (error) => {
+    pool.query(`SELECT * from visitors WHERE visitorid = $1`, [visitorid],
+      (error,results) => {
         if (error) {
           throw error;
         }
-      };
+      console.log(results.rows)
+      }
+    )
   }
 
   deleteAllVisitors() {
-    pool.query(`DELETE from visitors`),
+    pool.query(`DELETE from visitors`,
       (error) => {
         if (error) {
           throw error;
         }
-      };
+      }
+    )
   }
 }
 module.exports = { Visitor };
