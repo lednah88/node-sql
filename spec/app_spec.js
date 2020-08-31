@@ -1,4 +1,4 @@
-let { Visitor } = require("../src/node_sql");
+let { Visitor } = require("../src/app");
 
 let visitor = new Visitor();
 let visitor1 = new Visitor(
@@ -17,7 +17,7 @@ describe("Visitor", () => {
   it("should check if visitor1.instance equals to something", () => {
     expect(visitor1.visitorName).toEqual("Tumi");
   });
-  it("should check if addNewVisitor is not undefined", () => {
+  it("should check if addNewVisitor is defined", () => {
     expect(visitor1.addNewVisitor).not.toBeUndefined();
   });
   it("should check if deleteVisitor is not null", () => {
@@ -26,7 +26,7 @@ describe("Visitor", () => {
   it("should check if updateVisitor is defined", () => {
     expect(visitor1.updateVisitor).toBeDefined();
   });
-  it("Should check if deleteAllVisitors function is defined", () => {
+  it("Should check if deleteAllVisitors is defined", () => {
     expect(visitor.deleteAllVisitors).toBeDefined();
   });
 });

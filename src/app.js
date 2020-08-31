@@ -10,14 +10,14 @@ let pool = new Pool({
 class Visitor {
   constructor(
     visitorName,
-    _visitorAge,
+    visitorAge,
     dateOfVisit,
     timeOfVisit,
     assistantName,
     comments
   ) {
     this.visitorName = visitorName;
-    this.visitorAge = this.visitorAge;
+    this.visitorAge = visitorAge;
     this.dateOfVisit = dateOfVisit;
     this.timeOfVisit = timeOfVisit;
     this.assistantName = assistantName;
