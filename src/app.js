@@ -1,10 +1,11 @@
 "use strict";
+require('dotenv').config();
 const Pool = require("pg").Pool;
 let pool = new Pool({
-  user: "user",
+  user: process.env.DB_ADMIN_USERNAME,
   host: "localhost",
   database: "db",
-  password: "pass",
+  password: process.env.DB_ADMIN_PASSWORD,
   port: 5432,
 });
 class Visitor {

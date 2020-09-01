@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Umuzi-org/Rixongile-Manyobe-282-node-sql-assignment-#readme",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "jasmine": "^3.6.1",
     "pg": "^8.3.3"
   }
