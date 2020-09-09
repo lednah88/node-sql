@@ -1,5 +1,5 @@
 "use strict";
-require('dotenv').config();
+require("dotenv").config();
 const Pool = require("pg").Pool;
 let pool = new Pool({
   user: process.env.DB_ADMIN_USERNAME,
@@ -8,25 +8,9 @@ let pool = new Pool({
   password: process.env.DB_ADMIN_PASSWORD,
   port: 5432,
 });
-class Visitor {
-  constructor(
-    visitorName,
-    visitorAge,
-    dateOfVisit,
-    timeOfVisit,
-    assistantName,
-    comments
-  ) {
-    this.visitorName = visitorName;
-    this.visitorAge = visitorAge;
-    this.dateOfVisit = dateOfVisit;
-    this.timeOfVisit = timeOfVisit;
-    this.assistantName = assistantName;
-    this.comments = comments;
-  }
-  async createTable() {
-    pool.query(
-      `CREATE TABLE visitors(
+function createTable() {
+  pool.query(
+    `CREATE TABLE visitors(
         visitorid SERIAL PRIMARY KEY,
         visitorName varchar(50) NOT NULL,
         visitorAge int, 
@@ -35,78 +19,104 @@ class Visitor {
         assistantName varchar(50),
         comments varchar(200)
         )`,
-      (error) => {
-        if (error) {
-          throw error;
-        }
+    (error, results) => {
+      if (error) {
+        throw error;
       }
-    )
-  }
-
-  async addNewVisitor() {
-    pool.query(
-      `INSERT INTO visitors(visitorName, visitorAge, dateOfVisit, timeOfVisit, assistantName,comments) values
-        (${this.visitorName}, ${this.visitorAge}, ${this.dateOfVisit}, ${this.timeOfVisit}, ${this.assistantName}, ${this.comments})`,
-      (error) => {
-        if (error) {
-          throw error;
-        }
-      }
-    )
-  }
-
-  async listAllVisitors() {
-    pool.query(`SELECT * from visitors`,
-      (error) => {
-        if (error) {
-          throw error;
-        }
-      }
-    )
-  }
-
-  async deleteVisitor() {
-    pool.query(`DELETE from visitors WHERE fullname = ${this.visitorName}`,
-      (error) => {
-        if (error) {
-          throw error;
-        }
-      }
-    )
-  }
-
-  async updateVisitor(columnToUpdate, newInfo) {
-    pool.query(
-      `UPDATE visitors SET ${columnToUpdate} = $1 WHERE visitorName = $2`,
-      [newInfo, this.visitorName],
-      (error,results) => {
-        if (error) {
-          throw error;
-        }
-      console.log(results.rows)
-      }
-    )
-  }
-
-  async viewOneVisitor(visitorid) {
-    pool.query(`SELECT * from visitors WHERE visitorid = $1`, [visitorid],
-      (error,results) => {
-        if (error) {
-          throw error;
-        }
-      console.log(results.rows)
-      }
-    )
-  }
-
-  deleteAllVisitors() {
-    pool.query(`DELETE from visitors`,
-      (error) => {
-        if (error) {
-          throw error;
-        }
-      }
-    )
-  }
+      console.log(results.rows);
+    }
+  );
 }
-module.exports = { Visitor };
+createTable();
+function addNewVisitor(
+  visitorName,
+  visitorAge,
+  dateOfVisit,
+  timeOfVisit,
+  assistantName,
+  comments
+) {
+  pool.query(
+    `INSERT INTO visitors(visitorName, visitorAge, dateOfVisit, timeOfVisit, assistantName,comments) values
+        ($1, $2, $3, $4, $5, $6) returning *`,
+    [
+      visitorName,
+      visitorAge,
+      dateOfVisit,
+      timeOfVisit,
+      assistantName,
+      comments,
+    ],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      console.log(results.rows);
+    }
+  );
+}
+addNewVisitor("Tumi", 20, "09-31-2020", "12:00", "Sizwe", "Thank you!");
+function listAllVisitors() {
+  pool.query(`SELECT * from visitors`, (error, results) => {
+    if (error) {
+      throw error;
+    }
+    console.log(results.rows);
+  });
+}
+listAllVisitors();
+function deleteVisitor(fullname) {
+  pool.query(
+    `DELETE from visitors WHERE fullname = $2`,
+    [fullname],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      console.log(results.rowCount);
+    }
+  );
+}
+function updateVisitor(visitorName,columnToUpdate, newInfo) {
+  pool.query(
+    `UPDATE visitors SET ${columnToUpdate} = $1 WHERE visitorName = $2`,
+    [newInfo, visitorName],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      console.log(results.rows);
+    }
+  );
+}
+function viewOneVisitor(visitorid) {
+  pool.query(
+    `SELECT * from visitors WHERE visitorid = $1`,
+    [visitorid],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      console.log(results.rows);
+    }
+  );
+}
+viewOneVisitor(1);
+function deleteAllVisitors() {
+  pool.query(`DELETE from visitors`, (error, results) => {
+    if (error) {
+      throw error;
+    }
+    console.log(results.rows);
+  });
+}
+deleteAllVisitors();
+module.exports = {
+  createTable,
+  addNewVisitor,
+  listAllVisitors,
+  deleteVisitor,
+  updateVisitor,
+  viewOneVisitor,
+  deleteAllVisitors
+};
