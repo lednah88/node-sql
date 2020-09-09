@@ -10,7 +10,7 @@ let pool = new Pool({
 });
 function createTable() {
   pool.query(
-    `CREATE TABLE visitors(
+    `CREATE TABLE IF NOT EXISTS visitors(
         visitorid SERIAL PRIMARY KEY,
         visitorName varchar(50) NOT NULL,
         visitorAge int, 
@@ -55,7 +55,7 @@ function addNewVisitor(
     }
   );
 }
-addNewVisitor("Tumi", 20, "09-31-2020", "12:00", "Sizwe", "Thank you!");
+addNewVisitor("Tumi", 20, "2020-09-01", "12:00", "Sizwe", "Thank you!");
 function listAllVisitors() {
   pool.query(`SELECT * from visitors`, (error, results) => {
     if (error) {
@@ -77,7 +77,7 @@ function deleteVisitor(fullname) {
     }
   );
 }
-function updateVisitor(visitorName,columnToUpdate, newInfo) {
+function updateVisitor(visitorName, columnToUpdate, newInfo) {
   pool.query(
     `UPDATE visitors SET ${columnToUpdate} = $1 WHERE visitorName = $2`,
     [newInfo, visitorName],
@@ -118,5 +118,5 @@ module.exports = {
   deleteVisitor,
   updateVisitor,
   viewOneVisitor,
-  deleteAllVisitors
+  deleteAllVisitors,
 };
