@@ -67,7 +67,7 @@ function listAllVisitors() {
 listAllVisitors();
 function deleteVisitor(fullname) {
   pool.query(
-    `DELETE from visitors WHERE fullname = $2`,
+    `DELETE from visitors WHERE visitorName = $1`,
     [fullname],
     (error, results) => {
       if (error) {
